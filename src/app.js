@@ -40,11 +40,14 @@ name:'Ziyad Wael'
 
 })
 app.get('/weather',(req,res)=>{
-    if(!req.query.address){
-        return res.send({
-            error :'you must provide address'
-    })
+    if(!req.query.latitude){
+        if(!req.query.address ){
+            return res.send({
+                error :'you must provide address'
+        })
+        }
     }
+  if(req.query.address){
     geocode(req.query.address,(error,{latitude,longitude,location}={})=>{
 
         if(error){
@@ -64,6 +67,17 @@ app.get('/weather',(req,res)=>{
             
           })
         })
+    }else {
+        forecast(req.query.latitude,req.query.longitude,(error , forecastData)=>{
+            if(error){
+                return res.send({error})
+            }
+            res.send({
+                forecast:forecastData
+                
+            })
+        })
+    }
 
 
 })
